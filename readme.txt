@@ -1,5 +1,5 @@
 === LaunchOverlay – Coming Soon Banner for Products ===
-Contributors:      markjgorrie
+Contributors: markjgorrie
 Tags:              woocommerce, coming soon, pre-order, product overlay, banner
 Requires at least: 6.0
 Tested up to:      6.9
@@ -30,7 +30,6 @@ Add "Coming Soon", "Pre-Order", and launch banner overlays to WooCommerce produc
 * Accessible markup (aria-hidden on decorative overlay)
 * Lightweight — pure CSS, no jQuery dependencies
 
-= Pro Features (coming soon) =
 
 * Custom banner text (free-form)
 * Full RGB / HEX colour picker
@@ -54,7 +53,6 @@ Yes. The overlay is injected via the `woocommerce_product_get_image` filter whic
 = Will it slow down my store? =
 No. The plugin enqueues a single minifiable CSS file (~2 KB) only on shop/product pages.
 
-= Where are the Pro features? =
 A Pro add-on is in development. Join the mailing list on our website to be notified at launch.
 
 == Screenshots ==
