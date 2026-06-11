@@ -1,0 +1,271 @@
+/* =============================================================================
+   LaunchOverlay for WooCommerce — Public CSS  v1.0.2
+   ============================================================================= */
+
+/* ── Design tokens (overridden at runtime via wp_add_inline_style) ───────────── */
+:root {
+	--lo-cs:     #3b5bdb;   /* Coming Soon background  */
+	--lo-po:     #f76707;   /* Pre-Order background    */
+	--lo-so:     #343a40;   /* Sold Out background     */
+	--lo-txt:    #ffffff;   /* Overlay text colour     */
+	--lo-font:   -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+	--lo-weight: 700;
+	--lo-ease:   cubic-bezier(.4, 0, .2, 1);
+}
+
+/* ════════════════════════════════════════════════════════════════════════════════
+   IMAGE WRAPPER
+   .lo-img-wrap is the <span> injected by PHP around the <img>.
+   It MUST be position:relative so child overlays (position:absolute) work.
+   ════════════════════════════════════════════════════════════════════════════════ */
+.lo-img-wrap {
+	position: relative !important;
+	display: block !important;
+	overflow: hidden !important;
+	line-height: 0;             /* kills phantom gap below inline img */
+	font-size: 0;               /* belt-and-braces for inline-block gap */
+}
+
+/* Image must fill the wrapper */
+.lo-img-wrap > img,
+.lo-img-wrap img {
+	display: block !important;
+	width: 100% !important;
+	height: auto !important;
+	margin: 0 !important;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════════
+   BASE OVERLAY SPAN
+   ════════════════════════════════════════════════════════════════════════════════ */
+.lo-overlay {
+	position: absolute !important;
+	z-index: 30 !important;       /* above WooCommerce sale badge (z-index:9) */
+	display: inline-flex !important;
+	align-items: center;
+	justify-content: center;
+	pointer-events: none;
+	font-family: var(--lo-font);
+	font-weight: var(--lo-weight);
+	color: var(--lo-txt);
+	letter-spacing: .06em;
+	text-transform: uppercase;
+	line-height: 1;
+	white-space: nowrap;
+	user-select: none;
+	-webkit-user-select: none;
+	/* GPU layer hint for smooth transitions */
+	will-change: transform;
+}
+
+.lo-text {
+	display: block;
+	position: relative;
+	z-index: 1;
+}
+
+/* ── Type background colours ─────────────────────────────────────────────────── */
+.lo-type-coming_soon { background-color: var(--lo-cs) !important; }
+.lo-type-pre_order   { background-color: var(--lo-po) !important; }
+.lo-type-sold_out    { background-color: var(--lo-so) !important; }
+
+/* ════════════════════════════════════════════════════════════════════════════════
+   STYLE: BANNER  — full-width strip
+   ════════════════════════════════════════════════════════════════════════════════ */
+.lo-style-banner {
+	left: 0 !important;
+	right: 0 !important;
+	width: 100% !important;
+	padding: 7px 12px !important;
+	font-size: 11px !important;
+	text-align: center !important;
+	box-sizing: border-box !important;
+	/* Gloss shimmer */
+	background-image: linear-gradient(
+		180deg,
+		rgba(255,255,255,.14) 0%,
+		rgba(255,255,255,0)   60%
+	) !important;
+	box-shadow: 0 2px 6px rgba(0,0,0,.18) !important;
+}
+
+/* Top placements */
+.lo-style-banner.lo-pos-top-left,
+.lo-style-banner.lo-pos-top-center,
+.lo-style-banner.lo-pos-top-right {
+	top: 0 !important;
+	bottom: auto !important;
+	border-bottom: 2px solid rgba(0,0,0,.10) !important;
+}
+
+/* Bottom placements */
+.lo-style-banner.lo-pos-bottom-left,
+.lo-style-banner.lo-pos-bottom-center,
+.lo-style-banner.lo-pos-bottom-right {
+	bottom: 0 !important;
+	top: auto !important;
+	border-top: 2px solid rgba(0,0,0,.10) !important;
+	box-shadow: 0 -2px 6px rgba(0,0,0,.14) !important;
+	background-image: linear-gradient(
+		0deg,
+		rgba(255,255,255,.10) 0%,
+		rgba(255,255,255,0)   60%
+	) !important;
+}
+
+/* Center fallback */
+.lo-style-banner.lo-pos-center {
+	top: 50% !important;
+	bottom: auto !important;
+	transform: translateY(-50%) !important;
+}
+
+/* Single product page — taller */
+.lo-style-banner.lo-single {
+	font-size: 13px !important;
+	padding: 10px 16px !important;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════════
+   STYLE: BADGE / PILL  — compact floating label
+   ════════════════════════════════════════════════════════════════════════════════ */
+.lo-style-badge {
+	padding: 5px 13px 5px 10px !important;
+	border-radius: 100px !important;
+	font-size: 10.5px !important;
+	gap: 6px !important;
+	box-shadow: 0 2px 8px rgba(0,0,0,.22), 0 1px 3px rgba(0,0,0,.15) !important;
+	border: 1px solid rgba(255,255,255,.2) !important;
+	/* Soft inner highlight */
+	background-image: linear-gradient(
+		135deg,
+		rgba(255,255,255,.20) 0%,
+		rgba(255,255,255,0)   55%
+	) !important;
+}
+
+/* Animated pulse dot */
+.lo-style-badge::before {
+	content: "" !important;
+	display: inline-block !important;
+	width: 6px !important;
+	height: 6px !important;
+	min-width: 6px !important;
+	border-radius: 50% !important;
+	background: rgba(255,255,255,.88) !important;
+	flex-shrink: 0 !important;
+	animation: lo-pulse 2.2s ease-in-out infinite !important;
+}
+
+/* Sold Out — no pulsing dot */
+.lo-type-sold_out.lo-style-badge::before {
+	animation: none !important;
+	opacity: .5 !important;
+}
+
+@keyframes lo-pulse {
+	0%, 100% { opacity: 1;    transform: scale(1);    }
+	50%       { opacity: .45; transform: scale(1.4);  }
+}
+
+/* Badge positions */
+.lo-style-badge.lo-pos-top-left      { top: 10px !important; left: 10px !important; bottom: auto !important; right: auto !important; }
+.lo-style-badge.lo-pos-top-center    { top: 10px !important; left: 50% !important; transform: translateX(-50%) !important; bottom: auto !important; right: auto !important; }
+.lo-style-badge.lo-pos-top-right     { top: 10px !important; right: 10px !important; bottom: auto !important; left: auto !important; }
+.lo-style-badge.lo-pos-bottom-left   { bottom: 10px !important; left: 10px !important; top: auto !important; right: auto !important; }
+.lo-style-badge.lo-pos-bottom-center { bottom: 10px !important; left: 50% !important; transform: translateX(-50%) !important; top: auto !important; right: auto !important; }
+.lo-style-badge.lo-pos-bottom-right  { bottom: 10px !important; right: 10px !important; top: auto !important; left: auto !important; }
+.lo-style-badge.lo-pos-center        { top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important; bottom: auto !important; right: auto !important; }
+
+/* Single product — bigger badge */
+.lo-style-badge.lo-single {
+	font-size: 12px !important;
+	padding: 7px 16px 7px 13px !important;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════════
+   SINGLE PRODUCT GALLERY — inject inside the gallery div
+   ════════════════════════════════════════════════════════════════════════════════ */
+
+/* The gallery image div needs position:relative so our absolute overlay works */
+.woocommerce-product-gallery .woocommerce-product-gallery__image {
+	position: relative !important;
+	overflow: hidden !important;
+}
+
+/* The overlay is injected directly into the gallery__image div by PHP */
+.woocommerce-product-gallery .lo-overlay {
+	z-index: 30 !important;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════════
+   REPLACEMENT MESSAGE (shown instead of Add to Cart button)
+   ════════════════════════════════════════════════════════════════════════════════ */
+.lo-replacement-msg {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	background: #f1f3f5;
+	color: #495057;
+	border: 1px solid #dee2e6;
+	border-radius: 6px;
+	padding: 9px 16px;
+	font-size: 13.5px;
+	font-family: var(--lo-font);
+	font-style: italic;
+	line-height: 1.4;
+	cursor: default;
+}
+
+.lo-replacement-msg::before {
+	content: "🕐";
+	font-style: normal;
+	flex-shrink: 0;
+	font-size: 15px;
+}
+
+.lo-replacement-msg--single {
+	display: flex;
+	margin-top: 20px;
+	padding: 13px 20px;
+	font-size: 14px;
+	border-radius: 8px;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════════
+   THEME COMPATIBILITY
+   ════════════════════════════════════════════════════════════════════════════════ */
+
+/* Ensure the anchor around our wrapper is block-level (Storefront, Astra, etc.) */
+.woocommerce ul.products li.product a.woocommerce-loop-product__link,
+.woocommerce-page ul.products li.product a.woocommerce-loop-product__link {
+	display: block;
+}
+
+/* Flatsome / some themes set overflow:hidden on the li — override on our wrap */
+.lo-img-wrap .attachment-woocommerce_thumbnail,
+.lo-img-wrap .wp-post-image {
+	display: block !important;
+	width: 100% !important;
+	height: auto !important;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ════════════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 600px) {
+	.lo-style-banner { font-size: 10px !important; padding: 5px 8px !important; }
+	.lo-style-badge  { font-size: 9.5px !important; padding: 4px 10px 4px 8px !important; }
+	.lo-style-badge::before { width: 5px !important; height: 5px !important; min-width: 5px !important; }
+}
+
+/* ════════════════════════════════════════════════════════════════════════════════
+   ACCESSIBILITY
+   ════════════════════════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+	.lo-overlay,
+	.lo-style-badge::before {
+		animation: none !important;
+		transition: none !important;
+	}
+}
