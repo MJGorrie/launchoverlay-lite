@@ -1,1 +1,0 @@
-Applied initial WordPress.org cleanup pass:\n- removed load_plugin_textdomain usage\n- updated plugin/textdomain naming\n- cleaned readme contributor lines\n- added enqueue asset bootstrap placeholder\n
